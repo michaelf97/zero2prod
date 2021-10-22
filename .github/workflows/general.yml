@@ -30,10 +30,6 @@ jobs:
           toolchain: stable
           override: true
           components: rustfmt
-      - uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
 
   clippy:
     name: Clippy
