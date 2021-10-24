@@ -1,14 +1,15 @@
 # Here we check for already existing credentials. Otherwise, set to default
-# could use $DB_USER ??= "postgres" but only supports PS Version 7
-if ($DB_USER -eq $null) { $DB_USER="postgres" }
-if ($DB_PASSWORD -eq $null) { $DB_PASSWORD="password" }
-if ($DB_NAME -eq $null) { $DB_NAME="newsletter" }
-if ($DB_PORT -eq $null) { $DB_PORT="5432" }
+if ($env:DB_USER -eq $null) { $env:DB_USER="postgres" }
+if ($env:DB_PASSWORD -eq $null) { $env:DB_PASSWORD="password" }
+if ($env:DB_NAME -eq $null) { $env:DB_NAME="newsletter" }
+if ($env:DB_PORT -eq $null) { $env:DB_PORT="5432" }
 
 docker run `
-    -e POSTGRES_USER=${DB_USER} `
-    -e POSTGRES_PASSWORD=${DB_PASSWORD} `
-    -e POSTGRES_DB=${DB_NAME} `
-    -p ${DB_PORT}:5432 `
+    -e POSTGRES_USER=${env:DB_USER} `
+    -e POSTGRES_PASSWORD=${env:DB_PASSWORD} `
+    -e POSTGRES_DB=${env:DB_NAME} `
+    -p ${env:DB_PORT}:5432 `
     -d `
     postgres
+
+$env:DATABASE_URL="postgres://${env:DB_USER}:${env:DB_PASSWORD}@localhost:${env:DB_PORT}/${env:DB_NAME}"
