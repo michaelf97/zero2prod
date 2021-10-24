@@ -1,3 +1,21 @@
+#Check if dependencies are installed
+try {
+    psql --version
+}
+catch {
+    Write-Error "Missing psql! Install at https://www.postgresql.org/download/"
+    exit 1
+}
+
+try {
+    sqlx --version hidden
+}
+catch {
+    Write-Error "Missing sqlx! Install using cargo"
+    Write-Error "Example: cargo install --version={version_number} sqlx-cli --no-default-features --features postgres"
+    exit 1
+}
+
 # Here we check for already existing credentials. Otherwise, set to default
 if ($env:DB_USER -eq $null) { $env:DB_USER="postgres" }
 if ($env:PGPASSWORD -eq $null) { $env:PGPASSWORD="password" }
