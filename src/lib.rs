@@ -1,17 +1,21 @@
-use actix_web::{web, App, HttpResponse, HttpServer};
 use actix_web::dev::Server;
+use actix_web::{web, App, HttpServer};
+use routes::*;
+use sqlx::PgPool;
 use std::net::TcpListener;
 
-async fn health_check() -> HttpResponse {
-    HttpResponse::Ok().finish()
-}
+pub mod configuration;
+pub mod routes;
 
-pub fn run(listener: TcpListener) -> Result<Server, std::io::Error> {
-    let server = HttpServer::new(|| {
+pub fn run(listener: TcpListener, connection: PgPool) -> Result<Server, std::io::Error> {
+    let db_pool = web::Data::new(connection);
+    let server = HttpServer::new(move || {
         App::new()
             .route("/health_check", web::get().to(health_check))
-        })
-        .listen(listener)?
-        .run();
+            .route("/subscriptions", web::post().to(subscribe))
+            .app_data(db_pool.clone())
+    })
+    .listen(listener)?
+    .run();
     Ok(server)
 }

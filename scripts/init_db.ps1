@@ -47,4 +47,5 @@ while ($tries -lt 5) {
 Write-Output "Postgres is up and running on port: $env:DB_PORT"  
 $env:DATABASE_URL="postgres://${env:DB_USER}:${env:PGPASSWORD}@localhost:${env:DB_PORT}/${env:DB_NAME}"
 sqlx database create
-Write-Output "Database '$env:DB_NAME' created!"  
+Write-Output "Database '$env:DB_NAME' created!"
+sqlx migrate --source "../migrations" run
